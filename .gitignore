@@ -1,0 +1,6 @@
+.vs/
+bin/
+obj/
+
+Engine/bin/
+Engine/obj/
