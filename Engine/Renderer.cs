@@ -22,6 +22,7 @@ namespace Engine
         {
             this.bitmap = bitmap;
             ctx = Graphics.FromImage(this.bitmap);
+            ctx.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
         }
 
         public void Clear(Color color)
@@ -29,19 +30,24 @@ namespace Engine
             ctx.Clear(color);
         }
 
-        public void FillRect(int x, int y, int width, int height, Color color)
+        public void FillRect(float x, float y, float width, float height, Color color)
         {
             using (SolidBrush brush = new SolidBrush(color))
             {
-                ctx.FillRectangle(brush, new Rectangle(x, y, width, height));
+                ctx.FillRectangle(brush, new RectangleF(x, y, width, height));
             }
         }
 
-        public void FillCircle(int x, int y, int radius, Color color)
+        public void FillCircle(Vector pos, float radius, Color color)
+        {
+            FillCircle(pos.X, pos.Y, radius, color);
+        }
+
+        public void FillCircle(float x, float y, float radius, Color color)
         {
             using (SolidBrush brush = new SolidBrush(color))
             {
-                ctx.FillEllipse(brush, new Rectangle(x - radius, y - radius, radius * 2, radius * 2));
+                ctx.FillEllipse(brush, new RectangleF(x - radius, y - radius, radius * 2, radius * 2));
             }
         }
 

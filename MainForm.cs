@@ -12,15 +12,20 @@ namespace SoftwareRendering
         private readonly Bitmap bitmap;
         private readonly Renderer renderer;
 
-        private float sine = 0f;
-        private float sine2 = 0f;
+        private float angle = 0f;
+        private float timer = 0f;
+        private float invertTimer = 0f;
+        private Vector center;
+        private int colorOffset = 0;
+        private int colorInvertedIndex = 0;
         private Color[] colors = new Color[]
         {
-            Color.Red,
-            Color.Green,
-            Color.Blue,
-            Color.Yellow,
-            Color.Magenta
+            Color.IndianRed,
+            Color.DarkRed,
+            Color.PaleVioletRed,
+            Color.OrangeRed,
+            Color.PaleVioletRed,
+            Color.DarkRed
         };
 
         public MainForm()
@@ -30,34 +35,57 @@ namespace SoftwareRendering
             bitmap = new Bitmap(480, 360);
             renderer = new Renderer(bitmap);
 
+            center = new Vector(renderer.Width / 2f, renderer.Height / 2f);
+
             pb_surface.Image = bitmap;
             t_ticker.Enabled = true;
         }
 
-        private void Update()
+        private new void Update()
         {
-            sine += 0.0166f;
-            sine2 += 0.0332f;
+            angle += 0.6f;
+            timer += 0.0166f;
+            invertTimer += 0.0166f;
+
+            if (timer >= 0.15f)
+            {
+                timer = 0f;
+                colorOffset = (colorOffset + 1) % colors.Length;
+            }
+
+            if (invertTimer >= 0.05f)
+            {
+                invertTimer = 0f;
+                colorInvertedIndex = (colorInvertedIndex + 1) % 10;
+            }
         }
 
         private void Draw()
         {
             renderer.Clear(Color.Black);
 
-            int circleCount = 10;
-            float offset = (float)((Math.Sin(sine2) + 1f) / 2f);
-            offset = 1f - (offset * offset * offset);
-            float offset2 = 120f * (float)(Math.PI / 180f);
-            float step = (360f / (float)circleCount) * (float)(Math.PI / 180f);
-            for(int i = 0;i < circleCount; i++)
+            for(int i = 0;i < 10;i++)
             {
-                float sX = (float)Math.Cos(sine * 4f + (i * step * offset) + offset2);
-                float sY = (float)Math.Sin(sine * 4f + (i * step * offset) + offset2);
-                int x = (int)(sX * 100f + (renderer.Width / 2f));
-                int y = (int)(sY * 100f + (renderer.Height / 2f));
+                float angleOffset = (i + 1) * 0.2f;
+                if(i % 2 == 0)
+                {
+                    angleOffset *= -1f;
+                }
+                DrawCircleRing(i, 4 * (i + 1), 28 * (i + 1), 1f * (i + 4), angleOffset);
+            }
+        }
 
-                Color c = colors[(i % colors.Length)];
-                renderer.FillCircle(x, y, 10, c);
+        private void DrawCircleRing(int ringIndex, int circleCount, float radius, float circleRadius, float angleOffset)
+        {
+            float step = 360f / (float)circleCount;
+            for (int i = 0; i < circleCount; i++)
+            {
+                Vector pos = Vector.FromAngle(angle * angleOffset + (i * step));
+                pos *= radius;
+                pos += center;
+
+                Color c = colors[((i + colorOffset + ringIndex) % colors.Length)];
+                renderer.FillCircle(pos, circleRadius, (colorInvertedIndex == ringIndex) ? ColorUtils.Invert(c) : c);
             }
         }
 
