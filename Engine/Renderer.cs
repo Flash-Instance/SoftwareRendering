@@ -22,7 +22,7 @@ namespace Engine
         {
             this.bitmap = bitmap;
             ctx = Graphics.FromImage(this.bitmap);
-            ctx.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
+            ctx.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.None;
         }
 
         public void Clear(Color color)

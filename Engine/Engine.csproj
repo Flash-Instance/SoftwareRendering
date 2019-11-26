@@ -42,9 +42,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AssetLoader.cs" />
     <Compile Include="ColorUtils.cs" />
     <Compile Include="Maths\MathUtils.cs" />
     <Compile Include="Maths\Vector.cs" />
+    <Compile Include="Mesh.cs" />
     <Compile Include="Renderer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

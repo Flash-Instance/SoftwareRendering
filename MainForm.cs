@@ -32,10 +32,15 @@ namespace SoftwareRendering
         {
             InitializeComponent();
 
+            SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
+            SetStyle(ControlStyles.AllPaintingInWmPaint, true);
+
             bitmap = new Bitmap(480, 360);
             renderer = new Renderer(bitmap);
 
             center = new Vector(renderer.Width / 2f, renderer.Height / 2f);
+
+            Mesh testMesh = AssetLoader.LoadMesh("Assets/cube.obj");
 
             pb_surface.Image = bitmap;
             t_ticker.Enabled = true;
