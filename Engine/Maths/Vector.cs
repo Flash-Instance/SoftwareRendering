@@ -133,6 +133,11 @@ namespace Engine
             W = w;
         }
 
+        public override string ToString()
+        {
+            return string.Format("[{0}, {1}, {2}, {3}]", X, Y, Z, W);
+        }
+
         #region OPERATORS
         public static Vector operator +(Vector a, Vector b)
         {

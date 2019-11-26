@@ -25,7 +25,7 @@ namespace SoftwareRendering
             SetStyle(ControlStyles.AllPaintingInWmPaint, true);
 
             //bitmap = new Bitmap(480, 360);
-            bitmap = new Bitmap(480, 360);
+            bitmap = new Bitmap(360, 270);
             renderer = new Renderer(bitmap);
 
             mesh = AssetLoader.LoadMesh("Assets/cube.obj");
@@ -39,10 +39,10 @@ namespace SoftwareRendering
         {
             rotation += 0.8f;
             modelMatrix = Matrix4x4.CreateIdentity() *
-                          //Matrix4x4.CreateScale(Vector.One * 2f) *
+                          Matrix4x4.CreateScale(Vector.One * 0.5f) *
                           Matrix4x4.CreateRotation(MathUtils.Axis.Y, rotation) *
                           Matrix4x4.CreateRotation(MathUtils.Axis.X, rotation) *
-                          Matrix4x4.CreateTranslation(new Vector(0f, 0f, 1.5f));
+                          Matrix4x4.CreateTranslation(new Vector(0f, 0f, 4f));
         }
 
         private void Draw()

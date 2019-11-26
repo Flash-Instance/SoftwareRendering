@@ -17,6 +17,8 @@ namespace Engine
 
         private readonly Bitmap bitmap;
         private readonly Graphics ctx;
+        private readonly Font font;
+
         private float[,] depthBuffer;
 
         public Renderer(Bitmap bitmap)
@@ -24,6 +26,7 @@ namespace Engine
             this.bitmap = bitmap;
             ctx = Graphics.FromImage(this.bitmap);
             ctx.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.None;
+            font = SystemFonts.DefaultFont;
 
             Clear();
         }
@@ -37,14 +40,6 @@ namespace Engine
         {
             ctx.Clear(color);
             depthBuffer = new float[Width, Height];
-        }
-
-        public void DrawLine(float x1, float y1, float x2, float y2, float thickness, Color color)
-        {
-            using (Pen pen = new Pen(color, thickness))
-            {
-                ctx.DrawLine(pen, x1, y1, x2, y2);
-            }
         }
 
         public void FillRect(float x, float y, float width, float height, Color color)
@@ -80,32 +75,26 @@ namespace Engine
 
             for (int i = 0; i < mesh.TriangleCount; i++)
             {
-                Vector v1 = mesh[i * 3].Position;
-                Vector v2 = mesh[i * 3 + 1].Position;
-                Vector v3 = mesh[i * 3 + 2].Position;
-                Vector normal = mesh[i * 3].Normal;
+                Vector v1 = mesh[i * 3].Position * mp;
+                Vector v2 = mesh[i * 3 + 1].Position * mp;
+                Vector v3 = mesh[i * 3 + 2].Position * mp;
+                Vector normal = mesh[i * 3].Normal * (new Matrix4x4(new float[4, 4]{
+                    { 1f, 1f, 1f, 0f },
+                    { 1f, 1f, 1f, 0f },
+                    { 1f, 1f, 1f, 0f },
+                    { 0f, 0f, 0f, 1f }
+                }) * modelMatrix);
 
-                Vector center = (v1 + v2 + v3) / 3f;
-                Vector normalEnd = (center + (normal * 0.05f)) * mp;
-                center *= mp;
-                center /= center.W;
-                center += one;
-                center *= resolution;
-                normalEnd /= normalEnd.W;
-                normalEnd += one;
-                normalEnd *= resolution;
-
-                v1 *= mp;
-                v2 *= mp;
-                v3 *= mp;
-                //normal *= mp;
-
-                float dot = Vector.Dot(normal, v1);
-                if (dot < 0f)
+                float dot = Vector.Dot(normal.Normalized, mesh[i * 3].Position * modelMatrix);
+                if (dot < 0)
                 {
-                    v1 /= v1.W;
-                    v2 /= v2.W;
-                    v3 /= v3.W;
+                    //v1 *= mp;
+                    //v2 *= mp;
+                    //v3 *= mp;
+
+                    //v1 /= v1.W;
+                    //v2 /= v2.W;
+                    //v3 /= v3.W;
 
                     v1 = v1 + one;
                     v2 = v2 + one;
@@ -115,11 +104,12 @@ namespace Engine
                     v2 *= resolution;
                     v3 *= resolution;
 
-                    DrawLine(v3.X, v3.Y, v1.X, v1.Y, thickness, color);
-                    DrawLine(v1.X, v1.Y, v2.X, v2.Y, thickness, color);
-                    DrawLine(v2.X, v2.Y, v3.X, v3.Y, thickness, color);
-
-                    DrawLine(center.X, center.Y, normalEnd.X, normalEnd.Y, 0.5f, Color.Red);
+                    using (Pen pen = new Pen(color, thickness))
+                    {
+                        ctx.DrawLine(pen, v1.X, v1.Y, v2.X, v2.Y);
+                        ctx.DrawLine(pen, v2.X, v2.Y, v3.X, v3.Y);
+                        ctx.DrawLine(pen, v3.X, v3.Y, v1.X, v1.Y);
+                    }
                 }
             }
         }
