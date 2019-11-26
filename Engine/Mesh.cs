@@ -1,10 +1,41 @@
-﻿namespace Engine
+﻿using System;
+
+namespace Engine
 {
+    public struct Vertex
+    {
+
+        public readonly Vector Position;
+        public readonly Vector Normal;
+        public readonly Vector UV;
+
+        public Vertex(Vector position, Vector normal, Vector uv)
+        {
+            Position = position;
+            Normal = normal;
+            UV = uv;
+        }
+
+    }
+
     /// <summary>
     /// Represents a 3D model
     /// </summary>
     public class Mesh
     {
+
+        public Vertex this[int index]
+        {
+            get
+            {
+                if(index >= 0 && index < vertexIndices.Length)
+                {
+                    return new Vertex(vertices[vertexIndices[index]], normals[normalIndices[index]], uvs[uvIndices[index]]);
+                }
+
+                throw new IndexOutOfRangeException();
+            }
+        }
 
         public int TriangleCount
         {

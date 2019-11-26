@@ -90,8 +90,8 @@ namespace Engine
                                 {
                                     string[] indexRawValues = faceIndexGroups[j].Split('/');
                                     vertexIndices.Add(int.Parse(indexRawValues[0]) - 1);
-                                    normalIndices.Add(int.Parse(indexRawValues[1]) - 1);
-                                    uvIndices.Add(int.Parse(indexRawValues[2]) - 1);
+                                    uvIndices.Add(int.Parse(indexRawValues[1]) - 1);
+                                    normalIndices.Add(int.Parse(indexRawValues[2]) - 1);
                                 }
                                 break;
                         }

@@ -15,7 +15,7 @@ namespace Engine
         {
             get
             {
-                return (float)Math.Sqrt(X * X + Y * Y + Z * Z + W * W);
+                return (float)Math.Sqrt(X * X + Y * Y + Z * Z);
             }
         }
 
@@ -29,7 +29,7 @@ namespace Engine
                 float mag = Magnitude;
                 if(mag != 0)
                 {
-                    return new Vector(X / mag, Y / mag, Z / mag, W / mag);
+                    return new Vector(X / mag, Y / mag, Z / mag);
                 }
 
                 return this;
@@ -122,6 +122,11 @@ namespace Engine
         /// <param name="w">The W component of the vector</param>
         public Vector(float x, float y, float z, float w)
         {
+            if(float.IsNaN(x) || float.IsNaN(y) || float.IsNaN(z) || float.IsNaN(w))
+            {
+                throw new Exception("Invalid vector components");
+            }
+
             X = x;
             Y = y;
             Z = z;
@@ -131,32 +136,37 @@ namespace Engine
         #region OPERATORS
         public static Vector operator +(Vector a, Vector b)
         {
-            return new Vector(a.X + b.X, a.Y + b.Y, a.Z + b.Z, a.W + b.W);
+            return new Vector(a.X + b.X, a.Y + b.Y, a.Z + b.Z);
         }
 
         public static Vector operator +(Vector a, float s)
         {
-            return new Vector(a.X + s, a.Y + s, a.Z + s, a.W + s);
+            return new Vector(a.X + s, a.Y + s, a.Z + s);
         }
 
         public static Vector operator -(Vector a, Vector b)
         {
-            return new Vector(a.X - b.X, a.Y - b.Y, a.Z - b.Z, a.W - b.W);
+            return new Vector(a.X - b.X, a.Y - b.Y, a.Z - b.Z);
         }
 
         public static Vector operator -(Vector a, float s)
         {
-            return new Vector(a.X - s, a.Y - s, a.Z - s, a.W - s);
+            return new Vector(a.X - s, a.Y - s, a.Z - s);
         }
 
         public static Vector operator *(Vector a, Vector b)
         {
-            return new Vector(a.X * b.X, a.Y * b.Y, a.Z * b.Z, a.W * b.W);
+            return new Vector(a.X * b.X, a.Y * b.Y, a.Z * b.Z);
         }
 
         public static Vector operator *(Vector a, float s)
         {
-            return new Vector(a.X * s, a.Y * s, a.Z * s, a.W * s);
+            return new Vector(a.X * s, a.Y * s, a.Z * s);
+        }
+
+        public static Vector operator /(Vector a, float s)
+        {
+            return new Vector(a.X / s, a.Y / s, a.Z / s);
         }
         #endregion
 

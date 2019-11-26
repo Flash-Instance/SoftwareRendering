@@ -12,21 +12,10 @@ namespace SoftwareRendering
         private readonly Bitmap bitmap;
         private readonly Renderer renderer;
 
-        private float angle = 0f;
-        private float timer = 0f;
-        private float invertTimer = 0f;
-        private Vector center;
-        private int colorOffset = 0;
-        private int colorInvertedIndex = 0;
-        private Color[] colors = new Color[]
-        {
-            Color.IndianRed,
-            Color.DarkRed,
-            Color.PaleVioletRed,
-            Color.OrangeRed,
-            Color.PaleVioletRed,
-            Color.DarkRed
-        };
+        private Mesh mesh;
+        private Matrix4x4 modelMatrix;
+        private Matrix4x4 projectionMatrix;
+        private float rotation = 0f;
 
         public MainForm()
         {
@@ -35,12 +24,12 @@ namespace SoftwareRendering
             SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
             SetStyle(ControlStyles.AllPaintingInWmPaint, true);
 
+            //bitmap = new Bitmap(480, 360);
             bitmap = new Bitmap(480, 360);
             renderer = new Renderer(bitmap);
 
-            center = new Vector(renderer.Width / 2f, renderer.Height / 2f);
-
-            Mesh testMesh = AssetLoader.LoadMesh("Assets/cube.obj");
+            mesh = AssetLoader.LoadMesh("Assets/cube.obj");
+            projectionMatrix = Matrix4x4.CreateProjection(renderer.Width, renderer.Height, 60f, 0.001f, 100f);
 
             pb_surface.Image = bitmap;
             t_ticker.Enabled = true;
@@ -48,50 +37,19 @@ namespace SoftwareRendering
 
         private new void Update()
         {
-            angle += 0.6f;
-            timer += 0.0166f;
-            invertTimer += 0.0166f;
-
-            if (timer >= 0.15f)
-            {
-                timer = 0f;
-                colorOffset = (colorOffset + 1) % colors.Length;
-            }
-
-            if (invertTimer >= 0.05f)
-            {
-                invertTimer = 0f;
-                colorInvertedIndex = (colorInvertedIndex + 1) % 10;
-            }
+            rotation += 0.8f;
+            modelMatrix = Matrix4x4.CreateIdentity() *
+                          //Matrix4x4.CreateScale(Vector.One * 2f) *
+                          Matrix4x4.CreateRotation(MathUtils.Axis.Y, rotation) *
+                          Matrix4x4.CreateRotation(MathUtils.Axis.X, rotation) *
+                          Matrix4x4.CreateTranslation(new Vector(0f, 0f, 1.5f));
         }
 
         private void Draw()
         {
-            renderer.Clear(Color.Black);
+            renderer.Clear();
 
-            for(int i = 0;i < 10;i++)
-            {
-                float angleOffset = (i + 1) * 0.2f;
-                if(i % 2 == 0)
-                {
-                    angleOffset *= -1f;
-                }
-                DrawCircleRing(i, 4 * (i + 1), 28 * (i + 1), 1f * (i + 4), angleOffset);
-            }
-        }
-
-        private void DrawCircleRing(int ringIndex, int circleCount, float radius, float circleRadius, float angleOffset)
-        {
-            float step = 360f / (float)circleCount;
-            for (int i = 0; i < circleCount; i++)
-            {
-                Vector pos = Vector.FromAngle(angle * angleOffset + (i * step));
-                pos *= radius;
-                pos += center;
-
-                Color c = colors[((i + colorOffset + ringIndex) % colors.Length)];
-                renderer.FillCircle(pos, circleRadius, (colorInvertedIndex == ringIndex) ? ColorUtils.Invert(c) : c);
-            }
+            renderer.DrawMeshWireframe(mesh, modelMatrix, projectionMatrix, Color.LightGreen);
         }
 
         private void t_ticker_Tick(object sender, EventArgs e)
