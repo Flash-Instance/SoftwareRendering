@@ -54,5 +54,32 @@ namespace Engine
             return (float)(degrees * Math.PI / 180f);
         }
 
+        public static int Clamp(int min, int max, int value)
+        {
+            return (int)Math.Min(max, Math.Max(min, value));
+        }
+
+        public static float Min(params float[] values)
+        {
+            float min = float.MaxValue;
+            for(int i = 0;i < values.Length;i++)
+            {
+                min = Math.Min(min, values[i]);
+            }
+
+            return min;
+        }
+
+        public static float Max(params float[] values)
+        {
+            float max = float.MinValue;
+            for(int i = 0;i < values.Length;i++)
+            {
+                max = Math.Max(max, values[i]);
+            }
+
+            return max;
+        }
+
     }
 }
