@@ -49,7 +49,7 @@ namespace SoftwareRendering
         {
             renderer.Clear();
 
-            renderer.DrawMeshWireframe(mesh, modelMatrix, projectionMatrix, Color.LightGreen);
+            renderer.DrawMeshWireframe(mesh, projectionMatrix * modelMatrix, Color.LightGreen);
         }
 
         private void t_ticker_Tick(object sender, EventArgs e)

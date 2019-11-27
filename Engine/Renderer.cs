@@ -39,8 +39,9 @@ namespace Engine
             ctx.Clear(color);
             depthBuffer = new float[Width, Height];
         }
+        
 
-        public void DrawMeshWireframe(Mesh mesh, Matrix4x4 modelMatrix, Matrix4x4 projectionMatrix, Color color, float thickness = 1f)
+        public void DrawMeshWireframe(Mesh mesh, Matrix4x4 matrix, Color color, float thickness = 1f)
         {
             Vector resolution = new Vector(Width, Height) / 2f;
             resolution.Z = 1f;
@@ -48,15 +49,13 @@ namespace Engine
             Vector one = Vector.One;
             one.Z = 0f;
 
-            Matrix4x4 mp = projectionMatrix * modelMatrix;
-
             using (Pen pen = new Pen(color, thickness))
             {
                 for (int i = 0; i < mesh.TriangleCount; i++)
                 {
-                    Vector v1 = mesh[i * 3].Position * mp;
-                    Vector v2 = mesh[i * 3 + 1].Position * mp;
-                    Vector v3 = mesh[i * 3 + 2].Position * mp;
+                    Vector v1 = mesh[i * 3].Position * matrix;
+                    Vector v2 = mesh[i * 3 + 1].Position * matrix;
+                    Vector v3 = mesh[i * 3 + 2].Position * matrix;
 
                     // Calculate normal from projected vertex positions
                     Vector a = v2 - v1;
