@@ -5,14 +5,6 @@ namespace Engine
     public struct Matrix4x4
     {
 
-        public Matrix4x4 Inversed
-        {
-            get
-            {
-                return Inverse();
-            }
-        }
-
         private readonly float[,] m;
 
         public Matrix4x4(float[,] m)
@@ -167,69 +159,6 @@ namespace Engine
             });
         }
         #endregion
-
-        private Matrix4x4 Inverse()
-        {
-            double n1 = m[0, 0];
-            double n2 = m[0, 1];
-            double n3 = m[0, 2];
-            double n4 = m[0, 3];
-            double n5 = m[1, 0];
-            double n6 = m[1, 1];
-            double n7 = m[1, 2];
-            double n8 = m[1, 3];
-            double n9 = m[2, 0];
-            double n10 = m[2, 1];
-            double n11 = m[2, 2];
-            double n12 = m[2, 3];
-            double n13 = m[3, 0];
-            double n14 = m[3, 1];
-            double n15 = m[3, 2];
-            double n16 = m[3, 3];
-            double n17 = (double)n11 * (double)n16 - (double)n12 * (double)n15;
-            double n18 = (double)n10 * (double)n16 - (double)n12 * (double)n14;
-            double n19 = (double)n10 * (double)n15 - (double)n11 * (double)n14;
-            double n20 = (double)n9 * (double)n16 - (double)n12 * (double)n13;
-            double n21 = (double)n9 * (double)n15 - (double)n11 * (double)n13;
-            double n22 = (double)n9 * (double)n14 - (double)n10 * (double)n13;
-            double n23 = (double)n6 * (double)n17 - (double)n7 * (double)n18 + (double)n8 * (double)n19;
-            double n24 = -((double)n5 * (double)n17 - (double)n7 * (double)n20 + (double)n8 * (double)n21);
-            double n25 = (double)n5 * (double)n18 - (double)n6 * (double)n20 + (double)n8 * (double)n22;
-            double n26 = -((double)n5 * (double)n19 - (double)n6 * (double)n21 + (double)n7 * (double)n22);
-            double n27 = 1f / ((double)n1 * (double)n23 + (double)n2 * (double)n24 + (double)n3 * (double)n25 + (double)n4 * (double)n26);
-            double n28 = (double)n7 * (double)n16 - (double)n8 * (double)n15;
-            double n29 = (double)n6 * (double)n16 - (double)n8 * (double)n14;
-            double n30 = (double)n6 * (double)n15 - (double)n7 * (double)n14;
-            double n31 = (double)n5 * (double)n16 - (double)n8 * (double)n13;
-            double n32 = (double)n5 * (double)n15 - (double)n7 * (double)n13;
-            double n33 = (double)n5 * (double)n14 - (double)n6 * (double)n13;
-            double n34 = (double)n7 * (double)n12 - (double)n8 * (double)n11;
-            double n35 = (double)n6 * (double)n12 - (double)n8 * (double)n10;
-            double n36 = (double)n6 * (double)n11 - (double)n7 * (double)n10;
-            double n37 = (double)n5 * (double)n12 - (double)n8 * (double)n9;
-            double n38 = (double)n5 * (double)n11 - (double)n7 * (double)n9;
-            double n39 = (double)n5 * (double)n10 - (double)n6 * (double)n9;
-
-            Matrix4x4 r = new Matrix4x4(new float[4, 4]);
-            r.m[0, 0] = (float)((double)n23 * (double)n27);
-            r.m[1, 0] = (float)((double)n24 * (double)n27);
-            r.m[2, 0] = (float)((double)n25 * (double)n27);
-            r.m[3, 0] = (float)((double)n26 * (double)n27);
-            r.m[0, 1] = (float)-(((double)n2 * (double)n17 - (double)n3 * (double)n18 + (double)n4 * (double)n19) * (double)n27);
-            r.m[1, 1] = (float)(((double)n1 * (double)n17 - (double)n3 * (double)n20 + (double)n4 * (double)n21) * (double)n27);
-            r.m[2, 1] = (float)-(((double)n1 * (double)n18 - (double)n2 * (double)n20 + (double)n4 * (double)n22) * (double)n27);
-            r.m[3, 1] = (float)(((double)n1 * (double)n19 - (double)n2 *(double)n21 + (double)n3 * (double)n22) * (double)n27);
-            r.m[0, 2] = (float)(((double)n2 * (double)n28 - (double)n3 * (double)n29 + (double)n4 * (double)n30) * (double)n27);
-            r.m[1, 2] = (float)-(((double)n1 * (double)n28 - (double)n3 * (double)n31 + (double)n4 * (double)n32) * (double)n27);
-            r.m[2, 2] = (float)(((double)n1 * (double)n29 - (double)n2 * (double)n31 + (double)n4 * (double)n33) * (double)n27);
-            r.m[3, 2] = (float)-(((double)n1 * (double)n30 - (double)n2 * (double)n32 + (double)n3 * (double)n33) * (double)n27);
-            r.m[0, 3] = (float)-(((double)n2 * (double)n34 - (double)n3 * (double)n35 + (double)n4 * (double)n36) * (double)n27);
-            r.m[1, 3] = (float)(((double)n1 * (double)n34 - (double)n3 * (double)n37 + (double)n4 * (double)n38) * (double)n27);
-            r.m[2, 3] = (float)-(((double)n1 * (double)n35 - (double)n2 * (double)n37 + (double)n4 * (double)n39) * (double)n27);
-            r.m[3, 3] = (float)(((double)n1 * (double)n36 - (double)n2 * (double)n38 + (double)n3 * (double)n39) * (double)n27);
-
-            return r;
-        }
 
     }
 }
