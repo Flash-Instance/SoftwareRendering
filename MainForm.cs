@@ -28,8 +28,8 @@ namespace SoftwareRendering
             bitmap = new Bitmap(360, 270);
             renderer = new Renderer(bitmap);
 
-            mesh = AssetLoader.LoadMesh("Assets/cube.obj");
-            projectionMatrix = Matrix4x4.CreateProjection(renderer.Width, renderer.Height, 60f, 0.001f, 100f);
+            mesh = AssetLoader.LoadMesh("Assets/monkey_high.obj");
+            projectionMatrix = Matrix4x4.CreateProjection(renderer.Width, renderer.Height, 60f, 0.001f, 1000f);
 
             pb_surface.Image = bitmap;
             t_ticker.Enabled = true;
@@ -39,10 +39,10 @@ namespace SoftwareRendering
         {
             rotation += 0.8f;
             modelMatrix = Matrix4x4.CreateIdentity() *
-                          Matrix4x4.CreateScale(Vector.One * 0.5f) *
+                          Matrix4x4.CreateScale(Vector.One * 2f) *
                           Matrix4x4.CreateRotation(MathUtils.Axis.Y, rotation) *
-                          Matrix4x4.CreateRotation(MathUtils.Axis.X, rotation) *
-                          Matrix4x4.CreateTranslation(new Vector(0f, 0f, 4f));
+                          //Matrix4x4.CreateRotation(MathUtils.Axis.X, rotation) *
+                          Matrix4x4.CreateTranslation(new Vector(0f, 0f, 2f));
         }
 
         private void Draw()

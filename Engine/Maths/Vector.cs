@@ -176,6 +176,11 @@ namespace Engine
         #endregion
 
         #region STATIC METHODS
+        public static float Barycentric(Vector a, Vector b, Vector c)
+        {
+            return (b.X - a.X) * (c.Y - a.Y) - (b.Y - a.Y) * (c.X - a.X);
+        }
+
         /// <summary>
         /// Calculates the dot product between the given vectors
         /// </summary>
